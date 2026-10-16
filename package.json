@@ -1,0 +1,71 @@
+{
+  "name": "bb-plugin-apple-notes",
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "bb": ">=0.46.1",
+    "bbPluginSdk": ">=0.6.49",
+    "node": "^22.19.0 || ^24.0.0 || ^26.0.0"
+  },
+  "bb": {
+    "name": "Apple Notes",
+    "description": "an apple notes theme for bb. light and dark modes, a searchable sidebar, and a note-style writing space.",
+    "branding": {
+      "icon": "Notebook"
+    },
+    "server": "./server.ts",
+    "app": "./app.tsx",
+    "skills": [
+      "skills"
+    ],
+    "themes": [
+      {
+        "id": "notes",
+        "name": "Apple Notes",
+        "description": "a gold palette and notes layout, in light and dark modes.",
+        "css": "./themes/apple-notes.css",
+        "codeTheme": {
+          "light": "github-light",
+          "dark": "github-dark"
+        }
+      }
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@get-bb/plugin-sdk": "0.6.49",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.0",
+    "bb-app": "0.46.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "description": "an apple notes theme for bb. light and dark modes, a searchable sidebar, and a note-style writing space.",
+  "license": "MIT",
+  "author": {
+    "name": "Alana Goyal",
+    "url": "https://github.com/alanagoyal"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alanagoyal/apple-notes-bb-theme.git"
+  },
+  "homepage": "https://github.com/alanagoyal/apple-notes-bb-theme#readme",
+  "bugs": {
+    "url": "https://github.com/alanagoyal/apple-notes-bb-theme/issues"
+  },
+  "keywords": [
+    "bb",
+    "bb-plugin",
+    "theme",
+    "apple-notes"
+  ],
+  "scripts": {
+    "build": "bb plugin build",
+    "typecheck": "tsc --noEmit",
+    "test": "node scripts/verify-routing.mjs",
+    "theme:sync": "python3 scripts/sync-theme.py",
+    "theme:check": "python3 scripts/sync-theme.py --check"
+  }
+}

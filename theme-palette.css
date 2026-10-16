@@ -1,0 +1,114 @@
+/* Apple Notes for BB — native BB theme.
+   Token overrides follow BB updates; the small cosmetic selector section
+   safely stops matching if future markup changes. No layout/behavior overrides. */
+:root,
+.light {
+  --canvas: #ffffff;
+  --ink: #333333;
+  --primary: #947000;
+  --primary-foreground: #ffffff;
+  --sidebar: #f5f5f5;
+  --sidebar-foreground: #333333;
+  --sidebar-accent: #eaeaea;
+  --sidebar-accent-foreground: #333333;
+  --sidebar-border: #dadada;
+  --surface-scrim: #fafafaf2;
+  --border: #dddddd;
+  --border-hairline: #e2e2e2;
+  --border-seam: #d9d9d9;
+  --input: #d3d3d3;
+  --secondary: #f3f3f3;
+  --accent: #f2f2f2;
+  --muted: #eeeeee;
+  --muted-foreground: #707070;
+  --subtle-foreground: #767676;
+  --readback-foreground: #727272;
+  --surface-selected: #ffe493;
+  --surface-selected-border: #eed17b;
+  --notes-selected-foreground: #333333;
+  --notes-button: #f5ce52;
+  --notes-button-foreground: #302600;
+  --ring: #b28a16;
+  --sidebar-ring: #b28a16;
+  --destructive: #d43229;
+  --destructive-foreground: #ffffff;
+  --destructive-text: #bc2921;
+  --warning: #b97800;
+  --warning-text: #8c6000;
+  --attention: #b97800;
+  --success: #267b43;
+  --diff-added: #267b43;
+  --diff-removed: #bc2921;
+  --pr-merged: #8251ac;
+  --file-accent: #947000;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+  --font-mono: "SF Mono", Menlo, Consolas, monospace;
+  --font-terminal: "SF Mono", Menlo, Consolas, monospace;
+  --radius: 0.5rem;
+}
+.dark {
+  --canvas: #202020;
+  --ink: #ededed;
+  --primary: #e6bd43;
+  --primary-foreground: #272100;
+  --sidebar: #292929;
+  --sidebar-foreground: #ededed;
+  --sidebar-accent: #383838;
+  --sidebar-accent-foreground: #ededed;
+  --sidebar-border: #424242;
+  --surface-scrim: #252525f2;
+  --border: #424242;
+  --border-hairline: #393939;
+  --border-seam: #414141;
+  --input: #555555;
+  --secondary: #303030;
+  --accent: #353535;
+  --muted: #373737;
+  --muted-foreground: #b3b3b3;
+  --subtle-foreground: #a4a4a4;
+  --readback-foreground: #ababab;
+  --surface-selected: #66551f;
+  --surface-selected-border: #8a7229;
+  --notes-selected-foreground: #fff4d1;
+  --notes-button: #e6bd43;
+  --notes-button-foreground: #272100;
+  --ring: #e6bd43;
+  --sidebar-ring: #e6bd43;
+  --destructive: #ff6961;
+  --destructive-foreground: #240502;
+  --destructive-text: #ff8a84;
+  --warning: #e6bd43;
+  --warning-text: #edcc70;
+  --attention: #e6bd43;
+  --success: #79cb90;
+  --diff-added: #79cb90;
+  --diff-removed: #ff8a84;
+  --pr-merged: #c49ae8;
+  --file-accent: #e6bd43;
+}
+/* Cosmetic additions only: preserve sizes, hit targets and virtual row geometry. */
+[data-sidebar="group-label"] { font-weight: 600; }
+[data-sidebar-rename-row] .bb-thread-title { font-weight: 500; }
+[data-sidebar-rename-row].bb-sidebar-selected-row {
+  background-color: var(--surface-selected) !important;
+  color: var(--notes-selected-foreground) !important;
+  box-shadow: inset 0 0 0 1px var(--surface-selected-border);
+  border-radius: 6px;
+}
+[data-sidebar-rename-row].bb-sidebar-selected-row [data-sidebar-thread-provider] {
+  color: var(--notes-selected-foreground);
+}
+header .bb-thread-title { font-weight: 600; }
+form[data-promptbox] {
+  background: var(--canvas) !important;
+  border-color: var(--border) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 7%, transparent) !important;
+}
+form[data-promptbox]:focus-within {
+  border-color: var(--ring) !important;
+}
+form[data-promptbox] button[type="submit"] {
+  background: var(--notes-button) !important;
+  color: var(--notes-button-foreground) !important;
+}

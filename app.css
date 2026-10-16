@@ -1,0 +1,553 @@
+/* Native BB controls remain mounted; this stylesheet reshapes their presentation.
+   No copied thread renderer, command handler or navigation implementation. */
+.apple-notes-ui { --bb-app-chrome-row-height:52px; --notes-message-gap:8px; }
+.apple-notes-ui [data-sidebar="sidebar"] > div:first-child { flex-direction: column; }
+.apple-notes-ui [data-testid="app-nav-rail"] {
+  order: 2; width: 100%; flex-direction: row; margin: 0; padding: 5px 9px;
+  background: var(--sidebar); border-top: 1px solid var(--border-seam); flex-shrink:0;
+}
+.apple-notes-ui [data-testid="app-nav-rail"] > [aria-hidden="true"] { display:none; }
+.apple-notes-ui [data-testid="app-nav-rail"] nav { flex-direction:row; gap:2px; padding:0; align-items:center; }
+.apple-notes-ui [data-testid="app-nav-rail"] nav > div { flex-direction:row; gap:2px; padding:0; overflow-x:auto; }
+.apple-notes-ui [data-testid="app-nav-rail"] nav button { width:26px; height:30px; border-radius:5px; }
+.apple-notes-ui [data-testid="app-nav-rail"] nav button [data-icon-root] { width:16px; height:16px; }
+.apple-notes-ui [data-testid="app-sidebar-top-reserve-row"] { padding-left:46px; border-bottom:0; }
+.apple-notes-ui [data-sidebar-header-slot] { justify-content:flex-end; }
+.apple-notes-ui [data-sidebar-header-slot] button { flex:0 0 30px; width:30px; height:30px; padding:0; justify-content:center; align-items:center; color:var(--muted-foreground); }
+.apple-notes-ui [data-sidebar-header-slot] button > span { display:none; }
+.apple-notes-ui [data-sidebar-header-slot] button > svg { width:20px; height:20px; }
+.apple-notes-ui [data-sidebar="content"] { gap:0; padding:0 8px; --bb-sidebar-row-height:66px; --bb-sidebar-row-height-coarse:70px; }
+.apple-notes-ui [data-sidebar="group-label"] { padding:9px 8px 5px; font-size:12px; font-weight:600; }
+.apple-notes-ui [data-sidebar="group-content"] { font-size:14px; }
+.apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id]) { border-radius:6px; margin-bottom:1px; }
+.apple-notes-ui [data-sidebar-rename-row].bb-sidebar-selected-row { box-shadow:none; }
+.apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id])::after { content:''; position:absolute; left:16px; right:16px; bottom:0; height:1px; background:var(--border-hairline); pointer-events:none; }
+.apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id]):is(.bb-sidebar-selected-row,:hover)::after { opacity:0; }
+/* Shared handling for pinned, virtualized, hovered and menu-open rows. */
+.apple-notes-ui [data-sidebar-rename-row][data-an-separator-hidden]::after { opacity:0; }
+.apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id]) > span:first-child > span { align-items:flex-start; padding-top:13px; }
+.apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id]) .bb-thread-title { font-size:14px; font-weight:600; line-height:20px; }
+.apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id]) [data-sidebar-thread-provider] { margin-top:0; width:14px; height:14px; opacity:.65; }
+.apple-notes-ui .an-note-meta { position:absolute; left:29px; right:16px; top:36px; pointer-events:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--muted-foreground); font-size:12px; line-height:17px; }
+.apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id]).bb-sidebar-selected-row .an-note-meta { color:var(--notes-selected-foreground); opacity:.8; }
+.apple-notes-ui [data-sidebar="footer"] { padding:6px 10px; }
+.apple-notes-ui .an-search-mount { position:sticky; top:0; z-index:80; padding:4px 8px 10px; background:var(--sidebar); }
+.apple-notes-ui .an-search { display:flex; align-items:center; gap:6px; background:var(--canvas); border:1px solid var(--border); border-radius:7px; height:28px; padding:0 8px; color:var(--muted-foreground); }
+.apple-notes-ui .an-search:focus-within { outline:2px solid var(--surface-selected-border); outline-offset:1px; }
+.apple-notes-ui .an-search input { width:100%; min-width:0; border:0; outline:0; background:transparent; font:inherit; font-size:13px; color:var(--foreground); }
+.apple-notes-ui .an-search button { display:grid; place-items:center; width:24px; height:24px; flex-shrink:0; font-size:18px; cursor:pointer; border-radius:4px; }
+.apple-notes-ui .an-search button:focus-visible { outline:2px solid var(--ring); }
+/* Results scroll with the list; only the search field remains sticky. */
+.apple-notes-ui .an-search-mount:has(.an-search-results) { position:static; }
+.apple-notes-ui .an-search-mount:has(.an-search-results) .an-search { position:sticky; top:4px; z-index:1; box-shadow:0 0 0 8px var(--sidebar); }
+.apple-notes-ui [data-an-searching] > [data-bb-plugin="thread-list"] { display:none; }
+.apple-notes-ui .an-section-label { font-size:12px; color:var(--muted-foreground); padding:14px 0 8px; }
+.apple-notes-ui .an-result { display:flex; flex-direction:column; gap:4px; padding:12px 8px; border-bottom:1px solid var(--border-hairline); border-radius:6px; color:var(--foreground); }
+.apple-notes-ui .an-result:is(:hover,:focus-visible) { background:var(--surface-selected); color:var(--notes-selected-foreground); }
+.apple-notes-ui .an-result strong { font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.apple-notes-ui .an-result span { color:var(--muted-foreground); font-size:12px; }
+.apple-notes-ui [data-split-pane-id] > header { background:var(--canvas); border-bottom:0; }
+.apple-notes-ui [data-split-pane-id] > header .bb-thread-title { font-size:12px; font-weight:400; color:var(--muted-foreground); }
+.apple-notes-ui .an-heading-anchor { display:none; }
+.apple-notes-ui .an-document-heading { padding:0 0 26px; }
+.apple-notes-ui .an-document-heading time { display:block; text-align:center; font-size:12px; color:var(--muted-foreground); margin:0 0 20px; }
+.apple-notes-ui { --notes-link:#b88000; }
+.apple-notes-ui.dark { --notes-link:#e6bd43; }
+.apple-notes-ui [data-message-column] [data-markdown-preview] a {
+  color:var(--notes-link); text-decoration:underline; text-underline-offset:2px;
+}
+.apple-notes-ui [data-message-column] [data-markdown-preview] a:hover { text-decoration-thickness:2px; }
+/* Change only the artwork: BB retains the button, shortcut and accessible name. */
+.apple-notes-ui [data-sidebar-header-slot] button:has([data-icon="MessageSquarePlus"]) > svg { display:none; }
+/* Lucide SquarePen icon; see THIRD_PARTY_NOTICES.md for its ISC license. */
+.apple-notes-ui [data-sidebar-header-slot] button:has([data-icon="MessageSquarePlus"])::before {
+  content:''; display:block; width:16px; height:16px; flex-shrink:0;
+  background:currentColor;
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%203H5a2%202%200%200%200-2%202v14a2%202%200%200%200%202%202h14a2%202%200%200%200%202-2v-7%22%2F%3E%3Cpath%20d%3D%22M18.375%202.625a1%201%200%200%201%203%203l-9.013%209.014a2%202%200%200%201-.853.505l-2.873.84a.5.5%200%200%201-.62-.62l.84-2.873a2%202%200%200%201%20.506-.852z%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+.apple-notes-ui .an-document-heading h1 { overflow-wrap:anywhere; font-size:26px; font-weight:700; line-height:1.25; letter-spacing:-.6px; margin:0; color:var(--foreground); }
+/* Note body typography follows BB's native text size and line height. */
+.apple-notes-ui [data-message-column] > .group\/message.ml-auto { margin-left:0; width:100%; max-width:100%; align-items:stretch; }
+.apple-notes-ui [data-message-column] > .group\/message.ml-auto > div:has(> div > [data-image-gallery-clipped]) { width:100%; align-items:stretch; }
+.apple-notes-ui [data-message-column] > .group\/message.ml-auto > div > div:has(> [data-image-gallery-clipped]) {
+  border:0 !important; border-left:2px solid var(--surface-selected-border) !important;
+  background:transparent !important; border-radius:0 !important; padding:0 0 0 14px !important;
+}
+.apple-notes-ui [data-message-column] > .group\/message.ml-auto > div > div:has(> [data-image-gallery-clipped])::before { content:'You'; display:block; font-size:11px; font-weight:600; color:var(--muted-foreground); margin-bottom:5px; }
+.apple-notes-ui [data-timeline-row-list="top-level"] { gap:var(--notes-message-gap); }
+.apple-notes-ui .chat-prompt-box { max-width:850px; padding-left:28px; padding-right:28px; }
+.apple-notes-ui form[data-promptbox] { border:1px solid var(--border) !important; background:var(--canvas) !important; border-radius:7px !important; box-shadow:none !important; }
+.apple-notes-ui form[data-promptbox]:focus-within { border-color:var(--input) !important; }
+.apple-notes-ui [data-promptbox-send-menu],
+.apple-notes-ui [data-promptbox-submit-action] { background:var(--notes-button) !important; color:var(--notes-button-foreground) !important; border-radius:6px !important; }
+@media (max-width:767px) {
+  .apple-notes-ui [data-testid="app-nav-rail"] nav button { min-width:32px; height:36px; }
+  .apple-notes-ui .an-search { height:34px; }
+  .apple-notes-ui .an-search input { font-size:16px; }
+  .apple-notes-ui .an-document-heading h1 { font-size:24px; }
+  .apple-notes-ui .chat-prompt-box { padding-left:16px; padding-right:16px; }
+}
+/* The host reserves the old vertical-rail width on this inner wrapper. */
+.apple-notes-ui [data-sidebar="collapsible-body"] > div { width:100% !important; }
+.apple-notes-ui [data-page-scroll-viewport] [class~="max-w-[760px]"] { max-width:none; padding-left:32px; padding-right:32px; }
+/* Keep the native collapsed rail fully usable. */
+.apple-notes-ui [data-collapsible="rail"] [data-sidebar="sidebar"] > div:first-child { flex-direction:row; }
+.apple-notes-ui [data-collapsible="rail"] [data-testid="app-nav-rail"] { order:0; flex-direction:column; width:100%; padding:0; border:0; }
+.apple-notes-ui [data-collapsible="rail"] [data-testid="app-nav-rail"] > [aria-hidden="true"] { display:block; }
+.apple-notes-ui [data-collapsible="rail"] [data-testid="app-nav-rail"] nav { flex-direction:column; gap:10px; padding-bottom:10px; }
+.apple-notes-ui [data-collapsible="rail"] [data-testid="app-nav-rail"] nav > div { flex-direction:column; gap:10px; overflow-x:hidden; overflow-y:auto; }
+@media(max-width:767px) { .apple-notes-ui [data-page-scroll-viewport] [class~="max-w-[760px]"] { padding-left:20px; padding-right:20px; } }
+.apple-notes-ui [data-testid="app-nav-rail"] nav,
+.apple-notes-ui [data-testid="app-nav-rail"] nav > div { min-width:0; }
+/* Straight shell seams: the sidebar and its toolbar form one continuous panel. */
+.apple-notes-ui [data-sidebar="collapsible-body"] {
+  border-top-left-radius:0 !important;
+  border-bottom-left-radius:0 !important;
+  clip-path:inset(0 -6px 0 0) !important;
+  border-left-width:0;
+  border-bottom-width:0;
+}
+.apple-notes-ui [data-sidebar="inset"] {
+  border-top-left-radius:0 !important;
+  border-bottom-left-radius:0 !important;
+}
+.apple-notes-ui [data-testid="app-nav-rail"] {
+  border-radius:0 !important;
+  padding:8px;
+}
+.apple-notes-ui [data-testid="app-nav-rail"] nav button { width:28px; height:28px; }
+.apple-notes-ui [data-collapsible="rail"] [data-testid="app-nav-rail"] nav {
+  padding:8px 0;
+}
+.apple-notes-ui [data-collapsible="rail"] [data-testid="app-nav-rail"] nav > div {
+  padding:0;
+}
+@media(max-width:767px) {
+  .apple-notes-ui [data-testid="app-nav-rail"] nav button { width:32px; height:36px; }
+}
+/* Reserve plugin additions during loading so their insertion cannot move content. */
+/* BB's separate footer row shares the expanded toolbar grid. Keep native
+   elements in place so menus, focus, and the collapsed rail still belong to BB. */
+.apple-notes-ui [data-sidebar="sidebar"]:has(> [data-testid="sidebar-footer-row"]):not([data-collapsible="rail"] *) {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 44px;
+  grid-template-rows:minmax(0,1fr) auto 45px;
+  background:var(--sidebar);
+}
+.apple-notes-ui [data-sidebar="sidebar"]:not([data-collapsible="rail"] *) > div:first-child:has(~ [data-testid="sidebar-footer-row"]),
+.apple-notes-ui [data-sidebar="sidebar"]:not([data-collapsible="rail"] *) > [data-testid="sidebar-footer-row"] { display:contents; }
+.apple-notes-ui [data-sidebar="sidebar"]:has(> [data-testid="sidebar-footer-row"]):not([data-collapsible="rail"] *) [data-testid="nav-rail-sidebar-body"] {
+  grid-area:1 / 1 / 2 / 3; min-height:0;
+}
+.apple-notes-ui [data-sidebar="sidebar"]:has(> [data-testid="sidebar-footer-row"]):not([data-collapsible="rail"] *) [data-testid="app-nav-rail"] {
+  grid-area:3 / 1; min-width:0; padding-right:0;
+}
+.apple-notes-ui [data-sidebar="sidebar"]:not([data-collapsible="rail"] *) > [data-testid="sidebar-footer-row"] > [data-sidebar="collapsible-body"] {
+  grid-area:2 / 1 / 3 / 3;
+}
+.apple-notes-ui [data-sidebar="sidebar"]:not([data-collapsible="rail"] *) > [data-testid="sidebar-footer-row"] > div:first-child {
+  grid-area:3 / 2; width:44px; padding:8px; margin:0;
+  background:var(--sidebar); border-top:1px solid var(--border-seam);
+}
+.apple-notes-ui [data-testid="sidebar-footer-row"] > div:first-child button { width:28px; height:28px; }
+.apple-notes-ui [data-testid="sidebar-footer-row"] > div:first-child [data-icon-root] { width:16px; height:16px; }
+@media(max-width:767px) {
+  .apple-notes-ui [data-sidebar="sidebar"]:has(> [data-testid="sidebar-footer-row"]):not([data-collapsible="rail"] *) { grid-template-rows:minmax(0,1fr) auto 53px; grid-template-columns:minmax(0,1fr) 48px; }
+  .apple-notes-ui [data-sidebar="sidebar"]:not([data-collapsible="rail"] *) > [data-testid="sidebar-footer-row"] > div:first-child { width:48px; }
+  .apple-notes-ui [data-testid="sidebar-footer-row"] > div:first-child button { width:32px; height:36px; }
+}
+.apple-notes-ui .an-search-mount { min-height:42px; flex-shrink:0; }
+.apple-notes-ui [data-sidebar="content"]:has([data-bb-plugin="thread-list"], [data-thread-list-placeholder="loading"]):not(:has(> .an-search-mount .an-search))::before {
+  content:'Search'; display:block; height:28px; flex-shrink:0; margin:4px 8px 10px; padding:3px 8px; border:1px solid var(--border); border-radius:7px; background:var(--canvas); color:var(--muted-foreground); font-size:13px;
+}
+.apple-notes-ui [aria-label="Loading sidebar navigation"] {
+  padding:28px 0 0; display:flex; flex-direction:column; gap:2px;
+}
+.apple-notes-ui [data-sidebar="navigation-loading-row"] {
+  height:var(--bb-sidebar-row-height,66px); flex-shrink:0; margin:0;
+  position:relative; align-items:flex-start; padding-top:13px;
+}
+.apple-notes-ui [data-sidebar="navigation-loading-row"]::after {
+  content:''; position:absolute; top:36px; left:22px; width:60%; height:12px;
+  background:var(--muted); border-radius:3px;
+}
+.apple-notes-ui [data-sidebar="navigation-loading-row"] > div { background:var(--muted); }
+.apple-notes-ui .an-document-heading { min-height:96.5px; position:absolute; top:0; left:0; right:0; }
+.apple-notes-ui div:has(> [data-timeline-row-list="top-level"]) { position:relative; padding-top:var(--an-heading-height,96.5px); }
+.apple-notes-ui [data-timeline-row-list="top-level"]:not(.an-document-heading + *)::before {
+  content:none;
+}
+.apple-notes-ui [aria-label="Loading thread"] { margin-top:0; }
+.apple-notes-ui [aria-label="Loading thread"]::before {
+  content:''; display:block; height:96.5px;
+  background:linear-gradient(var(--muted),var(--muted)) center 0 / 180px 12px no-repeat,
+             linear-gradient(var(--muted),var(--muted)) 0 38px / 55% 30px no-repeat;
+}
+@media(max-width:767px) {
+  .apple-notes-ui .an-search-mount { min-height:48px; }
+  .apple-notes-ui [data-sidebar="content"]:has([data-bb-plugin="thread-list"], [data-thread-list-placeholder="loading"]):not(:has(> .an-search-mount .an-search))::before { height:34px; font-size:16px; }
+}
+@media(max-width:767px) and (pointer:coarse) {
+  .apple-notes-ui [data-sidebar="navigation-loading-row"] { height:var(--bb-sidebar-row-height-coarse,70px); }
+}
+
+/* Loading uses the same document width and neutral ink as loaded notes. */
+.apple-notes-ui [class~="max-w-[760px]"]:has(> [aria-label="Loading thread"]) {
+  max-width:none; padding-left:32px; padding-right:32px;
+}
+.apple-notes-ui [aria-label="Loading thread"] .animate-pulse { background:var(--muted); }
+.apple-notes-ui [aria-label="Loading thread"] > div:first-child { justify-content:flex-start; }
+.apple-notes-ui [data-thread-header-workflow-actions] > [data-bb-plugin="apple-notes"] { display:none; }
+@media(max-width:767px) {
+  .apple-notes-ui [class~="max-w-[760px]"]:has(> [aria-label="Loading thread"]) { padding-left:20px; padding-right:20px; }
+}
+
+/* Reserve initial loading positions, including before the search portal exists. */
+.apple-notes-ui [data-sidebar="content"]:not(:has(> .an-search-mount .an-search)) [aria-label="Loading sidebar navigation"] { padding-top:32px; }
+/* Composer controls must not shrink when Beautiful Chat's stylesheet arrives. */
+.apple-notes-ui [data-promptbox-action-row] button { height:28px; }
+.apple-notes-ui [data-promptbox-submit-action] { width:28px; min-width:28px; height:28px; padding:0; }
+/* Let the native virtualizer restore its scroll anchor before revealing the
+   initial messages. This runs once per mounted timeline, never during streaming.
+   The CSS fallback reveals content even if the plugin fails to initialize. */
+@keyframes an-initial-reveal { from { visibility:hidden; } to { visibility:visible; } }
+.apple-notes-ui div:has(> [data-timeline-row-list="top-level"]):not([data-an-initial-ready]) {
+  visibility:hidden; animation:an-initial-reveal 2s step-end forwards;
+}
+/* Async context/app controls reserve their slots before their data arrives. */
+@media(min-width:768px) {
+  .apple-notes-ui [data-thread-header-workflow-actions] { min-width:50px; justify-content:flex-end; }
+  .apple-notes-ui [data-follow-up-composer-footer] > div:has(> [aria-label="Permission mode"]):not(:has(> [aria-label^="Context window"]))::after {
+    content:''; display:block; width:24px; height:24px; flex-shrink:0;
+  }
+}
+.apple-notes-ui [data-split-pane-id]:has([data-timeline-row-list="top-level"]):not(:has([data-an-initial-ready])) [data-app-composer] {
+  visibility:hidden; animation:an-initial-reveal 2s step-end forwards;
+}
+@media(min-width:768px) {
+  .apple-notes-ui [data-follow-up-composer-footer] > div:last-child {
+    min-width:156px; justify-content:flex-end;
+  }
+}
+.apple-notes-ui [data-page-scroll-viewport]:has([data-timeline-row-list="top-level"]):not(:has([data-an-initial-ready])),
+.apple-notes-ui #root-compose-main-panel:not([data-an-initial-ready]) {
+  visibility:hidden; animation:an-initial-reveal 2s step-end forwards;
+}
+/* Loading placeholders stay neutral; yellow is reserved for selection/actions. */
+.apple-notes-ui .animate-pulse[class*="bg-"],
+.apple-notes-ui [data-slot="skeleton"] {
+  background-color:var(--muted) !important;
+}
+/* More stays at the trailing edge while plugin navigation entries arrive. */
+.apple-notes-ui [data-sidebar="sidebar"]:not([data-collapsible="rail"] *) [data-testid="app-nav-rail"] nav { position:relative; }
+.apple-notes-ui [data-sidebar="sidebar"]:not([data-collapsible="rail"] *) [data-testid="app-nav-rail"] nav > div { padding-right:30px; }
+.apple-notes-ui [data-sidebar="sidebar"]:not([data-collapsible="rail"] *) [data-testid="app-nav-rail"] nav button[aria-label="More"] {
+  position:absolute; right:0; top:0; background:var(--sidebar);
+}
+@media(max-width:767px) {
+  .apple-notes-ui [data-sidebar="content"]:not(:has(> .an-search-mount .an-search)) [aria-label="Loading sidebar navigation"] { padding-top:28px; }
+  .apple-notes-ui [data-sidebar="sidebar"] [data-testid="app-nav-rail"] nav > div { padding-right:34px; }
+}
+
+/* Share the exact search artwork and inset across loading and interactive states. */
+.apple-notes-ui { --an-search-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2215%22%20height%3D%2215%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23707070%22%20stroke-width%3D%221.7%22%3E%3Ccircle%20cx%3D%2210.5%22%20cy%3D%2210.5%22%20r%3D%226.5%22%2F%3E%3Cpath%20d%3D%22m16%2016%205%205%22%2F%3E%3C%2Fsvg%3E"); }
+.apple-notes-ui.dark { --an-search-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2215%22%20height%3D%2215%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23b3b3b3%22%20stroke-width%3D%221.7%22%3E%3Ccircle%20cx%3D%2210.5%22%20cy%3D%2210.5%22%20r%3D%226.5%22%2F%3E%3Cpath%20d%3D%22m16%2016%205%205%22%2F%3E%3C%2Fsvg%3E"); }
+.apple-notes-ui .an-search,
+.apple-notes-ui [data-sidebar="content"]:has([data-bb-plugin="thread-list"], [data-thread-list-placeholder="loading"]):not(:has(> .an-search-mount .an-search))::before {
+  background-image:var(--an-search-icon);
+  background-position:8px center;
+  background-size:15px 15px;
+  background-repeat:no-repeat;
+  padding-left:29px;
+}
+.apple-notes-ui .an-search > svg { display:none; }
+.apple-notes-ui .an-search input::placeholder { color:var(--muted-foreground); opacity:1; }
+
+/* Keep the loading field until React has populated the portal, not merely
+   until its empty mount node has been inserted. */
+.apple-notes-ui .an-search-mount:empty { display:none; }
+.apple-notes-ui .an-search input { line-height:20px; }
+.apple-notes-ui [data-sidebar="content"]:has([data-bb-plugin="thread-list"], [data-thread-list-placeholder="loading"]):not(:has(> .an-search-mount .an-search))::before {
+  display:flex; align-items:center; padding-top:0; padding-bottom:0; line-height:20px;
+}
+/* Date sections decorate BB's native rows; keep its original section controls. */
+.apple-notes-ui [data-an-first-date] [data-sidebar="group-label"] [title="Threads"] { font-size:0; }
+.apple-notes-ui [data-an-first-date] [data-sidebar="group-label"] [title="Threads"]::before {
+  content:var(--an-first-date); font-size:12px;
+}
+.apple-notes-ui .an-date-heading {
+  margin:0; padding:16px 8px 8px; height:44px; box-sizing:border-box;
+  font-size:12px; font-weight:600; line-height:20px; color:var(--muted-foreground);
+}
+
+/* Anchor the native utility menu beside compose without reparenting React nodes.
+   Theme preload applies this before the plugin mounts, avoiding a footer jump. */
+.apple-notes-ui [data-sidebar="sidebar"] { anchor-scope:--an-compose; }
+.apple-notes-ui [data-sidebar-header-slot] button:has([data-icon="MessageSquarePlus"]) { anchor-name:--an-compose; }
+.apple-notes-ui [data-sidebar="sidebar"]:not([data-collapsible="rail"] *) > [data-testid="sidebar-footer-row"] > [data-sidebar="collapsible-body"] {
+  position:absolute; position-anchor:--an-compose;
+  grid-area:auto; top:anchor(center); right:anchor(left); bottom:auto; left:auto;
+  transform:translateY(-50%); margin-right:4px;
+  width:max-content; height:32px; z-index:40; clip-path:none !important;
+}
+.apple-notes-ui [data-sidebar="sidebar"]:not([data-collapsible="rail"] *) [data-sidebar="footer"] {
+  padding:0; width:max-content;
+}
+.apple-notes-ui [data-sidebar="sidebar"]:not([data-collapsible="rail"] *) #sidebar-footer-more { width:30px; height:32px; }
+
+/* The utility menu is permanently compact in the Notes toolbar. Match its
+   native action icons so unrelated visibility menus keep their Eye actions. */
+.apple-notes-ui [role="menu"]:has(> [role="menuitem"] [data-icon="Smartphone"]):has(> [role="menuitem"] [data-icon="Bug"]):has(> [role="menuitem"] [data-icon="SlidersHorizontal"]) > [role="menuitem"]:has([data-icon="Eye"]) {
+  display:none;
+}
+
+/* Native footer customization opens beneath its new toolbar location without
+   consuming thread-list height. Keep BB's editor, drag controls and Done action. */
+.apple-notes-ui [data-testid="app-sidebar-body"] > div:has(> div > [data-testid="sidebar-footer-customize-inline"]) {
+  position:absolute;
+  top:var(--bb-app-chrome-row-height,52px); bottom:auto; left:8px; right:8px;
+  transition:none; animation:none;
+  padding:0; z-index:100;
+  background:var(--sidebar); border:1px solid var(--border); border-radius:8px;
+  box-shadow:0 4px 16px rgb(0 0 0 / 14%);
+}
+
+/* Keep the duplicate title hidden and align BB's original, normally sized
+   thread menu with the workspace/editor controls on the right. */
+.apple-notes-ui [data-split-pane-id] > header .bb-thread-title { display:none; }
+.apple-notes-ui [data-split-pane-id] > header [data-testid="app-page-header-content-row"] > div:first-child {
+  justify-content:flex-end;
+}
+
+/* Lowercase presentation only: stored thread/project names remain editable. */
+.apple-notes-ui [data-sidebar-rename-row] .bb-thread-title,
+.apple-notes-ui [data-split-pane-id] > header .bb-thread-title,
+.apple-notes-ui .an-document-heading h1,
+.apple-notes-ui .an-note-meta,
+.apple-notes-ui .an-result strong,
+.apple-notes-ui .an-result span {
+  text-transform:lowercase;
+}
+
+/* Balance both ends of each two-line note row. */
+.apple-notes-ui [data-sidebar-rename-row]:has(> span [data-sidebar-thread-id]) { padding-right:8px; }
+.apple-notes-ui [data-sidebar-rename-row] [data-sidebar-thread-provider] {
+  position:absolute; top:50%; left:0; transform:translateY(-50%); margin-top:0;
+}
+.apple-notes-ui [data-sidebar-rename-row] [data-sidebar-thread-provider] + .bb-thread-title { margin-left:20px; }
+.apple-notes-ui .an-note-meta { right:44px; }
+.apple-notes-ui [data-sidebar-rename-row]:hover > .an-note-meta,
+.apple-notes-ui [data-sidebar-rename-row]:focus-within > .an-note-meta { right:76px; }
+.apple-notes-ui [data-sidebar-thread-trailing] [aria-label="Unread thread succeeded"] {
+  width:9px; height:9px; min-width:9px; min-height:9px;
+  background:#e6bd43; color:#e6bd43; border-radius:50%; opacity:1;
+}
+
+/* Keep unread dots off the selected highlight without shifting row actions. */
+.apple-notes-ui .bb-sidebar-selected-row [data-sidebar-thread-trailing] [aria-label^="Unread thread"] {
+  visibility:hidden;
+}
+
+/* Home's mobile Recent list uses separate native rows from the sidebar. */
+.apple-notes-ui [data-root-compose-mobile-recents] .bb-thread-title,
+.apple-notes-ui [data-root-compose-mobile-recents] span:has(> [data-icon="Folder"]) > span {
+  text-transform:lowercase;
+}
+
+/* Compact thread header: actions sit directly beside the right-sidebar toggle. */
+@media(max-width:767px) {
+  .apple-notes-ui [data-split-pane-id] > header button[aria-label="Close pane"] { display:none; }
+  .apple-notes-ui [data-split-pane-id] > header [data-testid="app-page-header-content-row"] { gap:2px; }
+  .apple-notes-ui [data-split-pane-id] > header [data-thread-header-workflow-actions] { display:none; }
+  .apple-notes-ui [data-split-pane-id] > header [data-thread-header-pane-actions] { margin-left:0; gap:0; }
+}
+
+/* Lowercase chat presentation, including existing and streamed messages. */
+.apple-notes-ui [data-message-column] { text-transform:lowercase; }
+/* Preserve case-sensitive code, paths, and editable text. */
+.apple-notes-ui [data-message-column] :is(pre,code,kbd,samp,input,textarea,[contenteditable="true"]) { text-transform:none; }
+
+/* Mobile home reuses the native sidebar in place at full viewport width.
+   :has applies at first paint; compose mode reveals BB's original composer. */
+@media(max-width:767px) {
+  .apple-notes-ui:has([data-testid="root-compose-compact-home"]):not(.an-mobile-compose) [data-sidebar="panel"] {
+    width:100% !important; z-index:40; border:0;
+  }
+  .apple-notes-ui:has([data-testid="root-compose-compact-home"]):not(.an-mobile-compose) [data-sidebar="inset"],
+  .apple-notes-ui:has([data-testid="root-compose-compact-home"]):not(.an-mobile-compose) [data-testid="app-sidebar-trigger-overlay"],
+  .apple-notes-ui:has([data-testid="root-compose-compact-home"]):not(.an-mobile-compose) [data-sidebar-mobile-backdrop] {
+    visibility:hidden; pointer-events:none;
+  }
+}
+
+/* BB arms touch dragging before opening the long-press menu. Its one-line
+   chip cannot represent our two-line rows: retain the row until dragging
+   actually starts, when BB takes over with its normal floating drag overlay. */
+.apple-notes-ui [data-an-note-row][data-sidebar-touch-armed="true"] > span:first-child { display:flex !important; }
+.apple-notes-ui [data-an-note-row][data-sidebar-touch-armed="true"] > [data-sidebar-touch-armed-chip] { display:none !important; }
+.apple-notes-ui [data-an-note-row][data-sidebar-touch-armed="true"] > [data-sidebar-thread-trailing] { display:flex !important; }
+.apple-notes-ui [data-an-note-row][data-sidebar-touch-armed="true"] { background:var(--sidebar) !important; }
+.apple-notes-ui [data-an-note-row][data-sidebar-touch-armed="true"].bb-sidebar-selected-row { background:var(--surface-selected) !important; }
+
+/* Hover tooltips share the native context-menu surface instead of the accent. */
+.apple-notes-ui [data-bb-portaled-overlay]:has(> [role="tooltip"]) {
+  background:var(--popover); color:var(--popover-foreground);
+  border:1px solid var(--border); box-shadow:0 4px 12px rgb(0 0 0 / 12%);
+}
+
+/* New thread is a blank note using BB's original editor and controls. */
+.apple-notes-ui div:has(> [data-promptbox-shell] #root-compose-prompt) {
+  height:100%; max-width:none; padding:24px 32px 16px;
+}
+.apple-notes-ui [data-promptbox-shell]:has(#root-compose-prompt) {
+  height:100%; min-height:0; display:flex; flex-direction:column;
+}
+.apple-notes-ui .an-new-note-date {
+  display:block; flex-shrink:0; min-height:20px; margin-bottom:24px;
+  text-align:center; font-size:12px; line-height:20px; color:var(--muted-foreground);
+}
+.apple-notes-ui form[data-promptbox]:has(#root-compose-prompt) {
+  flex:1; min-height:0; display:flex; flex-direction:column;
+  border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important;
+}
+.apple-notes-ui form:has(#root-compose-prompt) [data-promptbox-layout],
+.apple-notes-ui form:has(#root-compose-prompt) [data-promptbox-main] {
+  flex:1; min-height:0; display:flex; flex-direction:column;
+}
+.apple-notes-ui form:has(#root-compose-prompt) [data-promptbox-input-region] { flex:1; min-height:0; display:flex; flex-direction:column; }
+.apple-notes-ui form:has(#root-compose-prompt) [data-promptbox-editor-scroll] {
+  flex:1; min-height:0 !important; max-height:none !important; padding:0; cursor:text;
+}
+.apple-notes-ui form:has(#root-compose-prompt) [data-promptbox-action-row] { padding:8px 0 4px; }
+.apple-notes-ui [data-promptbox-shell]:has(#root-compose-prompt) [data-new-thread-footer] { padding:4px 0 0; flex-shrink:0; }
+@media(min-width:768px) {
+  .apple-notes-ui #root-compose-main-panel div:has(> div > [data-promptbox-shell] #root-compose-prompt) { height:100%; }
+}
+@media(max-width:767px) {
+  .apple-notes-ui.an-mobile-compose [data-testid="root-compose-compact-scroll-viewport"] { display:none; }
+  .apple-notes-ui.an-mobile-compose [data-testid="root-compose-compact-composer"] {
+    top:var(--bb-app-chrome-row-height,52px); bottom:0;
+  }
+  .apple-notes-ui.an-mobile-compose [data-testid="root-compose-compact-composer"] > div { height:100%; padding-bottom:0; }
+  .apple-notes-ui div:has(> [data-promptbox-shell] #root-compose-prompt) { padding:16px 20px; }
+}
+/* Own the blink clock so the focused caret keeps blinking while idle. */
+.apple-notes-ui form[data-promptbox] [contenteditable="true"] { caret-color:var(--notes-link); }
+@supports (caret-animation:manual) {
+  @keyframes an-caret-blink {
+    0%, 100% { caret-color:var(--notes-link); }
+    50% { caret-color:transparent; }
+  }
+  .apple-notes-ui form[data-promptbox] [contenteditable="true"]:focus,
+  .apple-notes-ui .an-search input:focus {
+    caret-animation:manual;
+    animation:an-caret-blink 1s step-end infinite;
+  }
+}
+
+/* Routing feedback reserves space between the note and its native pickers. */
+.apple-notes-ui [data-promptbox-shell]:has(#root-compose-prompt) > div:has(.an-routing-status) {
+  order:1; flex-shrink:0; min-width:0; margin:8px 0;
+}
+.apple-notes-ui [data-promptbox-shell]:has(#root-compose-prompt) > div:has(.an-routing-status[hidden]) { margin:0; }
+.apple-notes-ui [data-promptbox-shell]:has(#root-compose-prompt) > [data-new-thread-footer] { order:2; }
+.apple-notes-ui .an-routing-status {
+  display:flex; flex-direction:column; gap:8px; min-width:0;
+  padding:10px 12px; border:1px solid var(--border); border-radius:6px;
+  color:var(--muted-foreground); background:var(--canvas); font-size:12px; line-height:18px;
+}
+.apple-notes-ui .an-routing-status[hidden] { display:none; }
+.apple-notes-ui .an-routing-status[data-error] { border-color:var(--destructive-text); }
+.apple-notes-ui .an-routing-message { margin:0; white-space:pre-wrap; overflow-wrap:anywhere; max-height: min(180px, 25dvh); overflow-y:auto; }
+.apple-notes-ui .an-routing-actions { display:flex; flex-wrap:wrap; gap:8px 16px; }
+.apple-notes-ui .an-routing-status button { text-decoration:underline; text-underline-offset:2px; cursor:pointer; white-space:normal; text-align:left; }
+.apple-notes-ui .an-routing-status button:focus-visible { outline:2px solid var(--ring); outline-offset:3px; }
+
+/* Steer status adds a sibling ahead of the body; style the same native body. */
+.apple-notes-ui [data-message-column] > .group\/message.ml-auto > div:has(> span > [data-icon="ArrowTurnForward"]) { display:none; }
+/* ProseMirror can repaint its empty paragraph independently of the editor. */
+.apple-notes-ui [contenteditable] > p[data-placeholder="Ask anything."]::before { content:'Ask anything' !important; }
+
+/* Cover native expanded and compact placeholder decorations, including repaint. */
+.apple-notes-ui [contenteditable] [data-placeholder^="Ask anything. @"]::before { content:'Ask anything (@ to mention files, folders, or sections)' !important; }
+.apple-notes-ui [contenteditable] [data-placeholder="Ask for a follow-up."]::before { content:'Ask for a follow-up' !important; }
+.apple-notes-ui [contenteditable] [data-placeholder^="Ask for a follow-up. @"]::before { content:'Ask for a follow-up (@ to mention files, folders, sections, or threads)' !important; }
+
+.apple-notes-ui [contenteditable] [data-placeholder^="Ask anything @"]::before { content:'Ask anything (@ to mention files, folders, or sections)' !important; }
+.apple-notes-ui [contenteditable] [data-placeholder^="Ask for a follow-up @"]::before { content:'Ask for a follow-up (@ to mention files, folders, sections, or threads)' !important; }
+
+/* Continue writing on the note canvas; preserve the native composer's geometry. */
+.apple-notes-ui form[data-promptbox]:has(#thread-detail-follow-up-composer),
+.apple-notes-ui form[data-promptbox]:has(#thread-detail-follow-up-composer):focus-within {
+  border-color:transparent !important;
+  background:transparent !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  outline:none;
+}
+
+/* Follow-up starts at one line and grows with its native editor content. */
+.apple-notes-ui [data-follow-up-composer] [data-promptbox-editor-scroll] {
+  min-height:0 !important;
+}
+.apple-notes-ui #thread-detail-follow-up-composer { min-height:1lh; }
+
+/* Match the timeline's 8px text gutter rather than the old boxed-input inset. */
+.apple-notes-ui form[data-promptbox]:has(#thread-detail-follow-up-composer) { border-width:0 !important; }
+.apple-notes-ui [data-follow-up-composer] [data-promptbox-editor-scroll] { padding-left:8px; }
+
+/* Footer labels have their own 4px inset; align their first icon to note text. */
+.apple-notes-ui [data-follow-up-composer-footer] { padding-left:4px; }
+
+/* The add button contributes its own inset before the model picker. */
+.apple-notes-ui [data-follow-up-composer] [data-promptbox-action-row] { padding-left:6px; }
+@media (max-width:767px) and (pointer:coarse) {
+  .apple-notes-ui [data-follow-up-composer] [data-promptbox-action-row] { padding-left:2px; }
+}
+
+/* Dim the complete destination pane; the overlay never intercepts the drop. */
+.apple-notes-ui [data-an-file-drop] { position:relative; isolation:isolate; }
+.apple-notes-ui [data-an-file-drop]::after {
+  content:''; position:absolute; inset:0; z-index:100;
+  background:rgb(0 0 0 / 22%); border-radius:inherit; pointer-events:none;
+}
+
+/* The note continues into the composer with the native 8px message-row gap. */
+.apple-notes-ui .scroll-bottom-anchor-content:has([data-timeline-row-list="top-level"]) { padding-bottom:0; }
+.apple-notes-ui .scroll-bottom-anchor-content > .flex:has([data-timeline-row-list="top-level"]) { gap:0; }
+.apple-notes-ui [data-app-composer]:has([data-follow-up-composer]) > * { margin-top:0; margin-bottom:0; }
+/* BB retains a 1px scroll anchor between the timeline and footer. */
+.apple-notes-ui [data-follow-up-composer] [data-promptbox-editor-scroll] {
+  height:auto !important;
+  padding-top:calc(var(--notes-message-gap) - 1px) !important;
+  padding-bottom:4px !important;
+}
+.apple-notes-ui [data-follow-up-composer] [data-promptbox-editor-content] { height:auto !important; min-height:0 !important; }
+
+/* Working/thinking is a normal flow row, never a clipped footer overlay. */
+.apple-notes-ui .scroll-bottom-anchor-content > .flex > div[style*="opacity: 1"]:has(> div > .mt-4) {
+  height:auto !important;
+}
+.apple-notes-ui .scroll-bottom-anchor-content > .flex > div > div > .mt-4 {
+  margin-top:var(--notes-message-gap);
+}
+
+/* Message actions get the same breathing room and keep their native hit area. */
+.apple-notes-ui [data-message-column] .relative:has(> .absolute > button[aria-label="Copy message"]) {
+  margin-top:var(--notes-message-gap);
+  flex-shrink:0;
+}
+
+/* The boxed composer's fade obscures the note's last row and message actions. */
+.apple-notes-ui [data-scroll-footer]:has([data-follow-up-composer]) > div > [data-overflow-fade="above"] {
+  display:none;
+}
+
+/* Fork origin belongs to the note's metadata, not the writing surface. */
+.apple-notes-ui .an-fork-source { margin:8px 0 0; color:var(--muted-foreground); font-size:12px; line-height:20px; text-transform:lowercase; }
+.apple-notes-ui .an-fork-source button { color:inherit; text-decoration:underline; text-underline-offset:2px; cursor:pointer; }
+.apple-notes-ui .an-fork-source button:hover { color:var(--notes-link); }
+.apple-notes-ui [data-split-pane-id]:has(.an-fork-source) section[aria-label="Thread context before sending"]:has(> div:only-child > [title^="Forked from"]:only-child) { display:none; }
+
+.apple-notes-ui .an-fork-source { display:flex; gap:4px; align-items:center; white-space:nowrap; min-width:0; }
+.apple-notes-ui .an-fork-source button { min-width:0; overflow:hidden; text-overflow:ellipsis; }
