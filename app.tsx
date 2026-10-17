@@ -54,11 +54,13 @@ function useMobileNotesHome() {
         sync();
       }
     };
-    const observer = new MutationObserver(sync);
+    let frame = 0;
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(() => { frame = 0; sync(); }); };
+    const observer = new MutationObserver(schedule);
     observer.observe(document.getElementById('root') || document.body, {childList:true,subtree:true,attributes:true,attributeFilter:['inert','data-state']});
     document.addEventListener('click',onClick,true); media.addEventListener('change',sync); sync();
     return () => {
-      observer.disconnect(); document.removeEventListener('click',onClick,true); media.removeEventListener('change',sync);
+      observer.disconnect(); cancelAnimationFrame(frame); document.removeEventListener('click',onClick,true); media.removeEventListener('change',sync);
       restore(); root.classList.remove('an-mobile-compose');
     };
   },[]);
@@ -108,6 +110,12 @@ function useNoteAutoFocus() {
       const link = target.closest<HTMLAnchorElement>('a[href*="/threads/"]')
         ?? (!button ? row?.querySelector<HTMLAnchorElement>('a[href*="/threads/"]') : null);
       if (!newNote && !link) return;
+      // Touch navigation should not summon the keyboard for an existing note.
+      // New notes may focus once in the gesture, never in a retry loop.
+      if (window.matchMedia('(pointer: coarse)').matches) {
+        if (newNote) document.getElementById('root-compose-prompt')?.focus({preventScroll:true});
+        return;
+      }
       const path = link ? new URL(link.href,location.href).pathname : null;
       cancelAnimationFrame(frame);
       const started = performance.now();
@@ -218,11 +226,14 @@ function useNoteSeparators() {
     });
     observer.observe(document.getElementById('root') || document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','data-state','style','hidden']});
     const events = ['pointerover','pointerout','focusin','focusout','scroll'] as const;
-    events.forEach(event => document.addEventListener(event,schedule,true));
+    const onSidebarEvent = (event: Event) => {
+      if (event.target instanceof Element && event.target.closest('[data-sidebar="content"]')) schedule();
+    };
+    events.forEach(event => document.addEventListener(event,onSidebarEvent,true));
     window.addEventListener('resize',schedule); sync();
     return () => {
       observer.disconnect(); cancelAnimationFrame(frame);
-      events.forEach(event => document.removeEventListener(event,schedule,true));
+      events.forEach(event => document.removeEventListener(event,onSidebarEvent,true));
       window.removeEventListener('resize',schedule);
       marked.forEach(node => node.removeAttribute('data-an-separator-hidden'));
     };
@@ -245,7 +256,6 @@ function NotesEnhancements() {
   live.current = {threads, projects};
   useLayoutEffect(() => {
     const owned = new Set<HTMLElement>();
-    const placeholderOriginals = new Map<HTMLElement, Map<string,string>>();
     const timelines = new Map<HTMLElement, number>();
     const prepareSurface = (container: HTMLElement | null, needsHeading: boolean) => {
       if (!container || timelines.has(container)) return;
@@ -283,15 +293,8 @@ function NotesEnhancements() {
         owned.add(search);
         setMount(search);
       }
-      document.querySelectorAll<HTMLElement>('[contenteditable][data-placeholder], [contenteditable] [data-placeholder]').forEach(node => {
-        for (const attr of ['data-placeholder','aria-label']) {
-          const value = node.getAttribute(attr);
-          if (!value || !/^Ask (?:anything|for a follow-up)(?:\.| @)/.test(value)) continue;
-          if (!placeholderOriginals.has(node)) placeholderOriginals.set(node,new Map());
-          if (!placeholderOriginals.get(node)!.has(attr)) placeholderOriginals.get(node)!.set(attr,value);
-          node.setAttribute(attr,value.replace(/^(Ask (?:anything|for a follow-up))\./,'$1').replace(/ (@ to mention.*)$/,' ($1)').replace(' ( @',' (@'));
-        }
-      });
+      // Placeholder decorations belong to the native editor. Rewriting them
+      // can ping-pong with its DOM observer; presentation is handled in CSS.
       document.querySelectorAll<HTMLElement>('[data-promptbox-shell]:has(#root-compose-prompt)').forEach(shell => {
         if (shell.querySelector(':scope > .an-new-note-date')) return;
         const date = document.createElement('time');
@@ -327,7 +330,7 @@ function NotesEnhancements() {
         });
         if (first) {
           if (group.getAttribute('data-an-first-date') !== first) group.setAttribute('data-an-first-date', first);
-          group.style.setProperty('--an-first-date', JSON.stringify(first));
+          if (group.style.getPropertyValue('--an-first-date') !== JSON.stringify(first)) group.style.setProperty('--an-first-date', JSON.stringify(first));
         } else {
           group.removeAttribute('data-an-first-date'); group.style.removeProperty('--an-first-date');
         }
@@ -352,11 +355,10 @@ function NotesEnhancements() {
         if (!row.hasAttribute('data-an-note-row')) row.setAttribute('data-an-note-row','');
       });
       for (const node of owned) if (!node.isConnected) owned.delete(node);
-      for (const node of placeholderOriginals.keys()) if (!node.isConnected) placeholderOriginals.delete(node);
     };
     const schedule = () => { if (!frame) frame = requestAnimationFrame(reconcile); };
     const observer = new MutationObserver(schedule);
-    observer.observe(document.getElementById('root') || document.body, {childList:true,subtree:true,attributes:true,attributeFilter:['data-placeholder']});
+    observer.observe(document.getElementById('root') || document.body, {childList:true,subtree:true});
     reconcile();
     const refreshDates = window.setInterval(schedule, 60_000);
     return () => {
@@ -367,7 +369,6 @@ function NotesEnhancements() {
       });
       timelines.forEach((id, node) => { cancelAnimationFrame(id); node.removeAttribute('data-an-initial-ready'); });
       owned.forEach(node => node.remove());
-      placeholderOriginals.forEach((attrs,node) => { if (node.isConnected) attrs.forEach((value,attr)=>node.setAttribute(attr,value)); });
       document.querySelectorAll('[data-an-note-row]').forEach(node => node.removeAttribute('data-an-note-row'));
     };
   }, []);
@@ -415,7 +416,7 @@ function NoteHeading({threadId}: PluginThreadHeaderActionProps) {
         list.before(heading);resize.observe(heading);setMount(heading);
       }
     };
-    const observer=new MutationObserver(attach);observer.observe(pane,{childList:true,subtree:true});attach();
+    const observer=new MutationObserver(() => { if (!heading?.isConnected) attach(); });observer.observe(pane,{childList:true,subtree:true});attach();
     return()=>{observer.disconnect();resize.disconnect();heading?.parentElement?.style.removeProperty('--an-heading-height');heading?.remove();};
   },[threadId]);
   return <><span ref={anchor} className="an-heading-anchor"/>{mount && thread && createPortal(<>

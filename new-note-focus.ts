@@ -3,6 +3,7 @@ export function installNewNoteFocus(): () => void {
   let surface: HTMLElement | null = null;
   let frame = 0;
   let pending = false;
+  let deadline = 0;
   const root = document.getElementById('root') || document.body;
   const cancel = () => {
     pending = false;
@@ -12,6 +13,7 @@ export function installNewNoteFocus(): () => void {
   const focus = () => {
     frame = 0;
     if (!pending || !surface?.isConnected) return;
+    if (performance.now() >= deadline) { cancel(); return; }
     const input = surface.querySelector<HTMLElement>('#root-compose-prompt');
     if (input && input.isContentEditable && !input.closest('[inert], [aria-hidden="true"]') && getComputedStyle(input).visibility === 'visible' && input.getBoundingClientRect().width > 0) {
       input.focus({preventScroll:true});
@@ -31,6 +33,7 @@ export function installNewNoteFocus(): () => void {
       const active = document.activeElement;
       const keepsFocus = active instanceof HTMLElement && active !== document.body && active !== document.documentElement && !surface.contains(active) && active.matches('input,textarea,select,[contenteditable="true"],[role="combobox"]');
       pending = !keepsFocus;
+      deadline = performance.now() + 2000;
     }
     if (pending && !frame) frame = requestAnimationFrame(focus);
   };

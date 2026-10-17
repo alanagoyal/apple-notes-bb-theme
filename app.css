@@ -16,6 +16,11 @@
 .apple-notes-ui [data-sidebar-header-slot] button { flex:0 0 30px; width:30px; height:30px; padding:0; justify-content:center; align-items:center; color:var(--muted-foreground); }
 .apple-notes-ui [data-sidebar-header-slot] button > span { display:none; }
 .apple-notes-ui [data-sidebar-header-slot] button > svg { width:20px; height:20px; }
+/* Modifier hints are wider than the compact compose icon. Let the native
+   button fit the full badge; its anchored utility menu follows it left. */
+.apple-notes-ui [data-sidebar-header-slot] button:has(> kbd) {
+  flex-basis:auto; width:max-content; gap:6px; padding-inline:6px;
+}
 .apple-notes-ui [data-sidebar="content"] { gap:0; padding:0 8px; --bb-sidebar-row-height:66px; --bb-sidebar-row-height-coarse:70px; }
 .apple-notes-ui [data-sidebar="group-label"] { padding:9px 8px 5px; font-size:12px; font-weight:600; }
 .apple-notes-ui [data-sidebar="group-content"] { font-size:14px; }
@@ -466,15 +471,15 @@
 /* Steer status adds a sibling ahead of the body; style the same native body. */
 .apple-notes-ui [data-message-column] > .group\/message.ml-auto > div:has(> span > [data-icon="ArrowTurnForward"]) { display:none; }
 /* ProseMirror can repaint its empty paragraph independently of the editor. */
-.apple-notes-ui [contenteditable] > p[data-placeholder="Ask anything."]::before { content:'Ask anything' !important; }
+.apple-notes-ui [contenteditable] > p.is-editor-empty[data-placeholder="Ask anything."]::before { content:'Ask anything' !important; }
 
 /* Cover native expanded and compact placeholder decorations, including repaint. */
-.apple-notes-ui [contenteditable] [data-placeholder^="Ask anything. @"]::before { content:'Ask anything (@ to mention files, folders, or sections)' !important; }
-.apple-notes-ui [contenteditable] [data-placeholder="Ask for a follow-up."]::before { content:'Ask for a follow-up' !important; }
-.apple-notes-ui [contenteditable] [data-placeholder^="Ask for a follow-up. @"]::before { content:'Ask for a follow-up (@ to mention files, folders, sections, or threads)' !important; }
+.apple-notes-ui [contenteditable] .is-editor-empty[data-placeholder^="Ask anything. @"]::before { content:'Ask anything (@ to mention files, folders, or sections)' !important; }
+.apple-notes-ui [contenteditable] .is-editor-empty[data-placeholder="Ask for a follow-up."]::before { content:'Ask for a follow-up' !important; }
+.apple-notes-ui [contenteditable] .is-editor-empty[data-placeholder^="Ask for a follow-up. @"]::before { content:'Ask for a follow-up (@ to mention files, folders, sections, or threads)' !important; }
 
-.apple-notes-ui [contenteditable] [data-placeholder^="Ask anything @"]::before { content:'Ask anything (@ to mention files, folders, or sections)' !important; }
-.apple-notes-ui [contenteditable] [data-placeholder^="Ask for a follow-up @"]::before { content:'Ask for a follow-up (@ to mention files, folders, sections, or threads)' !important; }
+.apple-notes-ui [contenteditable] .is-editor-empty[data-placeholder^="Ask anything @"]::before { content:'Ask anything (@ to mention files, folders, or sections)' !important; }
+.apple-notes-ui [contenteditable] .is-editor-empty[data-placeholder^="Ask for a follow-up @"]::before { content:'Ask for a follow-up (@ to mention files, folders, sections, or threads)' !important; }
 
 /* Continue writing on the note canvas; preserve the native composer's geometry. */
 .apple-notes-ui form[data-promptbox]:has(#thread-detail-follow-up-composer),

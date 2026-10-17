@@ -5,6 +5,8 @@ export function cancelNoteHandoff() { cancelHandoff?.(); }
 
 export function beginNoteHandoff() {
   cancelNoteHandoff();
+  // Copying computed styles for the entire canvas blocks touch navigation.
+  if (window.matchMedia('(pointer: coarse)').matches) return;
   const source = document.querySelector<HTMLElement>('#root-compose-main-panel');
   const editor = source?.querySelector<HTMLElement>('#root-compose-prompt');
   if (!source || !editor?.textContent?.trim()) return;
