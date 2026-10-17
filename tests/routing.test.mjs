@@ -1,6 +1,6 @@
-import {selectionMatches} from '../routing-selection.ts';
+import {selectionMatches} from '../src/routing-selection.ts';
 import assert from 'node:assert/strict';
-import {hasModelRequest, parseRouting} from '../natural-routing-parser.ts';
+import {hasModelRequest, parseRouting} from '../src/natural-routing-parser.ts';
 const projects=[{id:'website',name:'website'},{id:'demo',name:'demo-app'}];
 const hosts=[{id:'mini',name:'Example’s Mac Mini'},{id:'air',name:"Example's Macbook Air"}];
 const models=[{providerId:'codex',model:'gpt-6.1-sol',displayName:'6.1-Sol',supportedReasoningEfforts:[{reasoningEffort:'medium'},{reasoningEffort:'high'}]}];

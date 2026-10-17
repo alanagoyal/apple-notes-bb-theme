@@ -1,6 +1,6 @@
 # Third-party notices
 
-The SquarePen SVG paths embedded in `app.css` and the generated
+The SquarePen SVG paths embedded in `src/app.css` and the generated
 `themes/apple-notes.css` are from [Lucide](https://github.com/lucide-icons/lucide).
 The upstream license is reproduced below.
 

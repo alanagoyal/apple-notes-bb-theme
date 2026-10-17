@@ -13,11 +13,8 @@
     "branding": {
       "icon": "Notebook"
     },
-    "server": "./server.ts",
-    "app": "./app.tsx",
-    "skills": [
-      "skills"
-    ],
+    "server": "./src/server.ts",
+    "app": "./src/app.tsx",
     "themes": [
       {
         "id": "notes",
@@ -62,10 +59,10 @@
     "apple-notes"
   ],
   "scripts": {
-    "build": "bb plugin build",
+    "build": "npm run theme:sync && bb plugin build",
     "typecheck": "tsc --noEmit",
-    "test": "node scripts/verify-routing.mjs",
-    "theme:sync": "python3 scripts/sync-theme.py",
-    "theme:check": "python3 scripts/sync-theme.py --check"
+    "test": "node --test tests/*.test.mjs",
+    "theme:sync": "node scripts/sync-theme.mjs",
+    "theme:check": "node scripts/sync-theme.mjs --check"
   }
 }
