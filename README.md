@@ -22,6 +22,7 @@ system in settings → appearance.
 - start a new thread on a blank note, or drop attachments into a thread pane.
 - use phrases like `in my website project on mac mini` or `in a new worktree`
   to select from your own bb projects, machines, and models before sending.
+- write markdown directly in the composer, with formatting as you type.
 
 the plugin uses bb's native threads, composer, menus, shortcuts, and other
 plugins. search shows up to 60 active, non-hidden threads. on mobile, home opens

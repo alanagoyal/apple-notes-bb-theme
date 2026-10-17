@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import {markdownRanges} from '../src/markdown-editing.ts';
+const content = (text, name) => (markdownRanges(text).get(name) ?? []).map(r => text.slice(r.from,r.to));
+assert.deepEqual(content('* this is a bullet', 'bullet'), ['* ']);
+assert.deepEqual(content('- one\n  + nested\n1. ordered', 'bullet'), ['- ', '+ ']);
+assert.deepEqual(content('# Heading\n**bold** and *italic*', 'strong'), ['**bold**']);
+assert.deepEqual(content('**bold and _italic_**', 'emphasis'), ['_italic_']);
+assert.deepEqual(content('`* no bullet*`\n\n```md\n- not a bullet\n**not bold**\n```', 'bullet'), []);
+assert.deepEqual(content('`**no bold**`\n\n```\n**not bold**\n```', 'strong'), []);
+assert.deepEqual(content('\\* escaped\n\na_b_c\n\n\\*literal\\*', 'emphasis'), []);
+assert.deepEqual(content('😀 **bold**', 'strong'), ['**bold**']);
+assert.deepEqual(content('- [x] done\n- [ ] todo', 'task-done'), ['[x] ']);
+assert.deepEqual(content('- [x] done\n- [ ] todo', 'task-open'), ['[ ] ']);
+assert.deepEqual(content('~~removed~~', 'strike'), ['~~removed~~']);
+assert.deepEqual(content('[label](https://example.com)', 'syntax'), ['[', ']', '(', 'https://example.com', ')']);
+assert.deepEqual(content('[unresolved]', 'link'), []);
+assert.deepEqual(content('[unresolved]', 'syntax'), []);
+assert.deepEqual(content('unclosed **bold and *', 'strong'), []);
+const text = '# H\n- **B** and `C`\n> quote';
+const ranges = markdownRanges(text);
+assert.equal(markdownRanges(text), ranges);
+for (const entries of ranges.values()) for (const {from,to} of entries) assert.ok(from >= 0 && to > from && to <= text.length);
+assert.equal(markdownRanges('').size, 0);
+
+const nested = '- top\n  - nested\n    1. deeper';
+assert.deepEqual(content(nested, 'list-0'), ['- ']);
+assert.deepEqual(content(nested, 'list-1'), ['- ']);
+assert.deepEqual(content(nested, 'list-2'), ['1. ']);
+assert.deepEqual(content(nested, 'indent'), ['  ', '    ']);
+assert.deepEqual(content('1. first\n2. second', 'ordered'), ['1. ', '2. ']);
+assert.deepEqual(content('* ', 'bullet'), ['* ']);
+
+console.log('Markdown rendering and list indentation checks passed');

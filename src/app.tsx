@@ -10,6 +10,8 @@ import { dateGroup } from './date-groups';
 import { NaturalRouting } from './natural-routing';
 import { installThemeColorSync } from './theme-color-sync';
 import { installNewNoteFocus } from './new-note-focus';
+import { markdownRichText } from './markdown-editing';
+import { installMarkdownLines } from './markdown-lines';
 
 // Readiness belongs to a thread, not a virtualizer's replaceable DOM node.
 const revealedThreads = new Set<string>();
@@ -427,6 +429,7 @@ function NoteHeading({threadId}: PluginThreadHeaderActionProps) {
 }
 
 export default definePluginApp(app=>{
+  app.composer.customize({id:'markdown-editing',richText:markdownRichText});
   app.composer.customize({id:'natural-routing',scopes:['new-thread'],banners:[{id:'routing-status',chrome:'bare',component:NaturalRouting}]});
   app.commands.register({
     id:'toggle-color-mode', title:'Toggle light / dark mode',
@@ -444,9 +447,13 @@ export default definePluginApp(app=>{
   app.contentScripts.register({id:'notes-layout',mount(){
     document.documentElement.classList.remove('apple-notes-layout-disabled');
     document.documentElement.classList.add('apple-notes-ui');
+    // Clear source mode left by older plugin generations in this window.
+    document.documentElement.classList.remove('an-markdown-source');
     const disposeThemeColorSync = installThemeColorSync();
+    const disposeMarkdownLines = installMarkdownLines();
     return ()=>{
       disposeThemeColorSync();
+      disposeMarkdownLines();
       document.documentElement.classList.remove('apple-notes-ui');
       document.documentElement.classList.add('apple-notes-layout-disabled');
     };

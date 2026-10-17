@@ -28,15 +28,19 @@
       }
     ]
   },
-  "dependencies": {},
+  "dependencies": {
+    "@lezer/markdown": "^1.8.0",
+    "prosemirror-state": "^1.4.4"
+  },
   "devDependencies": {
     "@get-bb/plugin-sdk": "0.6.49",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "typescript": "^5.7.0",
     "bb-app": "0.46.1",
+    "prosemirror-model": "^1.25.12",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "typescript": "^5.7.0"
   },
   "description": "an apple notes theme for bb. light and dark modes, a searchable sidebar, and a note-style writing space.",
   "license": "MIT",

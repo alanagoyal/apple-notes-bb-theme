@@ -556,3 +556,52 @@
 
 .apple-notes-ui .an-fork-source { display:flex; gap:4px; align-items:center; white-space:nowrap; min-width:0; }
 .apple-notes-ui .an-fork-source button { min-width:0; overflow:hidden; text-overflow:ellipsis; }
+
+/* Paint the native draft without replacing the editor or its Markdown text. */
+.apple-notes-ui form[data-promptbox] .an-md-strong { font-weight:700; }
+.apple-notes-ui form[data-promptbox] .an-md-emphasis { font-style:italic; }
+.apple-notes-ui form[data-promptbox] .an-md-strike { text-decoration:line-through; }
+.apple-notes-ui form[data-promptbox] :is(.an-md-code,.an-md-code-block) {
+  font-family:var(--font-mono); background:var(--muted); border-radius:3px;
+}
+.apple-notes-ui form[data-promptbox] .an-md-code { padding:1px 3px; }
+.apple-notes-ui form[data-promptbox] .an-md-link { color:var(--notes-link); text-decoration:underline; text-underline-offset:2px; }
+.apple-notes-ui form[data-promptbox] .an-md-h1 { font-size:1.65em; font-weight:700; line-height:1.3; }
+.apple-notes-ui form[data-promptbox] .an-md-h2 { font-size:1.4em; font-weight:700; line-height:1.35; }
+.apple-notes-ui form[data-promptbox] .an-md-h3 { font-size:1.2em; font-weight:650; }
+.apple-notes-ui form[data-promptbox] :is(.an-md-h4,.an-md-h5,.an-md-h6) { font-weight:650; }
+.apple-notes-ui form[data-promptbox] .an-md-quote { color:var(--muted-foreground); }
+/* Reserve a real marker gutter. A positioned inline glyph used to sit below
+   the baseline and wrapped lines fell back underneath the bullet. */
+.apple-notes-ui form[data-promptbox] p:has([class*="an-md-list-"]) {
+  --an-list-depth:0;
+  padding-inline-start:calc((var(--an-list-depth) + 1) * 1.5em);
+  text-indent:-1.5em;
+  margin-block:0;
+}
+.apple-notes-ui form[data-promptbox] p:has(.an-md-list-1) { --an-list-depth:1; }
+.apple-notes-ui form[data-promptbox] p:has(.an-md-list-2) { --an-list-depth:2; }
+.apple-notes-ui form[data-promptbox] p:has(.an-md-list-3) { --an-list-depth:3; }
+.apple-notes-ui form[data-promptbox] p:has(.an-md-list-4) { --an-list-depth:4; }
+.apple-notes-ui form[data-promptbox] p:has(.an-md-list-5) { --an-list-depth:5; }
+.apple-notes-ui form[data-promptbox] p:has(.an-md-list-6) { --an-list-depth:6; }
+.apple-notes-ui form[data-promptbox] p:has(.an-md-list-7) { --an-list-depth:7; }
+.apple-notes-ui form[data-promptbox] p:has(.an-md-list-8) { --an-list-depth:8; }
+.apple-notes-ui form[data-promptbox] :is(.an-md-bullet,.an-md-ordered,.an-md-task-open,.an-md-task-done) {
+  display:inline-block; width:1.5em; text-indent:0; white-space:pre;
+  position:relative; vertical-align:baseline;
+}
+.apple-notes-ui form[data-promptbox] :is(.an-md-bullet,.an-md-task-open,.an-md-task-done) { color:transparent; }
+.apple-notes-ui form[data-promptbox] :is(.an-md-bullet,.an-md-task-open,.an-md-task-done)::after {
+  position:absolute; inset-block-start:0; inset-inline-start:.15em;
+  line-height:inherit; color:var(--foreground); pointer-events:none;
+}
+.apple-notes-ui form[data-promptbox] .an-md-bullet::after { content:'•'; }
+.apple-notes-ui form[data-promptbox] .an-md-task-open::after { content:'☐'; color:var(--notes-link); }
+.apple-notes-ui form[data-promptbox] .an-md-task-done::after { content:'☑'; color:var(--notes-link); }
+.apple-notes-ui form[data-promptbox] p:has(.an-md-task-open,.an-md-task-done) .an-md-bullet { display:none; }
+.apple-notes-ui form[data-promptbox] .an-md-quote-mark { position:relative; color:transparent; }
+.apple-notes-ui form[data-promptbox] .an-md-quote-mark::after {
+  content:'│'; position:absolute; inset:0; color:var(--border); pointer-events:none;
+}
+.apple-notes-ui form[data-promptbox] :is(.an-md-syntax,.an-md-fence,.an-md-indent) { font-size:0; }
