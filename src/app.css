@@ -212,6 +212,11 @@
 /* Composer controls must not shrink when Beautiful Chat's stylesheet arrives. */
 .apple-notes-ui [data-promptbox-action-row] button { height:28px; }
 .apple-notes-ui [data-promptbox-submit-action] { width:28px; min-width:28px; height:28px; padding:0; }
+/* Submit actions can include labels (new threads, handoffs, and other modes).
+   Outrank Beautiful Chat's promptbox rule regardless of stylesheet load order. */
+.apple-notes-ui [data-promptbox] button[data-promptbox-submit-action]:has([data-promptbox-submit-label]) {
+  width:max-content; min-width:max-content; flex-shrink:0; gap:6px; padding-inline:10px;
+}
 /* Let the native virtualizer restore its scroll anchor before revealing the
    initial messages. This runs once per mounted timeline, never during streaming.
    The CSS fallback reveals content even if the plugin fails to initialize. */
