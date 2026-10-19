@@ -12,6 +12,7 @@ import { installThemeColorSync } from './theme-color-sync';
 import { installNewNoteFocus } from './new-note-focus';
 import { markdownRichText } from './markdown-editing';
 import { installMarkdownLines } from './markdown-lines';
+import { useArchiveNavigation } from './use-archive-navigation';
 
 // Readiness belongs to a thread, not a virtualizer's replaceable DOM node.
 const revealedThreads = new Set<string>();
@@ -251,6 +252,7 @@ function NotesEnhancements() {
   useThreadFileDrop();
   useNoteSeparators();
   const { threads, projects } = experimental_useSidebarThreads();
+  useArchiveNavigation(threads);
   const navigate = useBbNavigate();
   const [mount, setMount] = useState<HTMLElement | null>(null);
   const [query, setQuery] = useState('');
