@@ -24,7 +24,12 @@
 .apple-notes-ui [data-sidebar="content"] { gap:0; padding:0 8px; --bb-sidebar-row-height:66px; --bb-sidebar-row-height-coarse:70px; }
 .apple-notes-ui [data-sidebar="group-label"] { padding:9px 8px 5px; font-size:12px; font-weight:600; }
 .apple-notes-ui [data-sidebar="group-content"] { font-size:14px; }
-.apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id]) { border-radius:6px; margin-bottom:1px; }
+/* Nested threads use BB's compact row class. Reserve the same two-line space
+   for every note so child titles and metadata stay inside their own row. */
+.apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id]) { height:var(--bb-sidebar-row-height); border-radius:6px; margin-bottom:1px; }
+@media (max-width:767px) and (pointer:coarse) {
+  .apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id]) { height:var(--bb-sidebar-row-height-coarse); }
+}
 .apple-notes-ui [data-sidebar-rename-row].bb-sidebar-selected-row { box-shadow:none; }
 .apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id])::after { content:''; position:absolute; left:16px; right:16px; bottom:0; height:1px; background:var(--border-hairline); pointer-events:none; }
 .apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id]):is(.bb-sidebar-selected-row,:hover)::after { opacity:0; }
@@ -33,7 +38,9 @@
 .apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id]) > span:first-child > span { align-items:flex-start; padding-top:13px; }
 .apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id]) .bb-thread-title { font-size:14px; font-weight:600; line-height:20px; }
 .apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id]) [data-sidebar-thread-provider] { margin-top:0; width:14px; height:14px; opacity:.65; }
-.apple-notes-ui .an-note-meta { position:absolute; left:29px; right:16px; top:36px; pointer-events:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--muted-foreground); font-size:12px; line-height:17px; }
+/* Inherit BB's depth-dependent row padding to align metadata with the title
+   at every nesting level; the margin accounts for the provider icon. */
+.apple-notes-ui .an-note-meta { position:absolute; left:0; padding-left:inherit; margin-left:20px; right:16px; top:36px; pointer-events:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--muted-foreground); font-size:12px; line-height:17px; }
 .apple-notes-ui [data-sidebar-rename-row]:has(> span > [data-sidebar-thread-id]).bb-sidebar-selected-row .an-note-meta { color:var(--notes-selected-foreground); opacity:.8; }
 .apple-notes-ui [data-sidebar="footer"] { padding:6px 10px; }
 .apple-notes-ui .an-search-mount { position:sticky; top:0; z-index:80; padding:4px 8px 10px; background:var(--sidebar); }
