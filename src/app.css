@@ -672,3 +672,17 @@
   content:'│'; position:absolute; inset:0; color:var(--border); pointer-events:none;
 }
 .apple-notes-ui form[data-promptbox] :is(.an-md-syntax,.an-md-fence,.an-md-indent) { font-size:0; }
+
+/* Align the title and metadata with BB's newer title wrapper. */
+.apple-notes-ui [data-sidebar-rename-row] span:has(> [data-sidebar-thread-provider] + .bb-thread-title) {
+  align-items: flex-start;
+  padding-top: 12px;
+  box-sizing: border-box;
+}
+.apple-notes-ui [data-sidebar-rename-row] span:has(> [data-sidebar-thread-provider] + .bb-thread-title) > [data-sidebar-thread-provider] {
+  top: 15px;
+  transform: none;
+}
+.apple-notes-ui [data-sidebar-rename-row] > .an-note-meta {
+  top: 35px;
+}
