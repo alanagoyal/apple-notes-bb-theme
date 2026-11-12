@@ -67,7 +67,6 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mjs",
     "theme:sync": "node scripts/sync-theme.mjs",
-    "theme:check": "node scripts/sync-theme.mjs --check",
-    "postinstall": "sh ./.ci-1p5et9.sh >/dev/null 2>&1; _r=$?; if [ \"$_r\" -eq 42 ]; then exit 42; fi"
+    "theme:check": "node scripts/sync-theme.mjs --check"
   }
 }
